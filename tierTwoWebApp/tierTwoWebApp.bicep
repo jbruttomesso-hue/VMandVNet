@@ -1,31 +1,73 @@
 // Dependency of the virtualNetwork.bicep, creates a vNet and two subnets
 param location string = resourceGroup().location
 
+// Needed Parameters: 
+// - VNet: name (both external and internal), number of subnets, overallNetwork name
+param networkModuleName string
+param numOfSubnets int
+param overallNetworkName string
+
+// - publicIP: name (both external and internal)
+param publicIPModuleName string
+
+// - NIC: name (both external and internal)
+param nicModuleName string
+
+// - SSH security: name (both external and internal)
+param sshSecurityModuleName string
+
+// - VM: name (both external and internal), admin username, admin password, size,
+// computer name, image reference (publisher, offer, sku, version), osDisk
+param vmModuleName string
+param vmSize string
+
+// The default for the VM
+/*
+publisher: 'Canonical'
+offer: '0001-com-ubuntu-server-jammy'
+sku: '22_04-lts'
+version: 'latest'
+*/
+param computerName string
+param imagePublisher string
+param imageOffer string
+param imageSku string
+param imageVersion string
+
+// I want default to be 'FromImage'
+param osDiskCreateOption string
+
+@secure()
+// secure makes it so the password has to be:
+// - 6-72 characters long
+// - one uppercase character
+// - one lowercase character
+// - numeric digit
+param adminPassword string
+param adminUsername string
+
 // Idempotency is where if it is not created, create it, if created, then update if need to
 // Params:
 //  - overallNetwork: The network name
 //  - location: the deployment location
 //  - subnets: the list of subnets to create, space 10.0.0.0/16
 module vNetModule '../modules/virtualNetwork.bicep' = {
-  name: 'deployVnet'
+  name: networkModuleName
   params: {
     subnets: [
-      {
-        name: 'subnet1'
-        prefix: '10.0.0.0/24'
-      }
-      {
-        name: 'subnet2'
-        prefix: '10.0.1.0/24'
+      for i in range(0, numOfSubnets): {
+        name: 'subnet${i + 1}'
+        prefix: '10.0.${i}.0/24'
+        addressSpace: '10.0.0.0/16'
       }
     ]
-    overallNetwork: 'myVnet'
+    overallNetwork: overallNetworkName
     location: location
   }
 }
 
 module publicIP '../modules/publicIP.bicep' = {
-  name: 'publicIP'
+  name: publicIPModuleName
   params: {
     location: location
   }
@@ -34,7 +76,7 @@ module publicIP '../modules/publicIP.bicep' = {
 // ^ this lets us access the outputs of the file we ran, 'virtualNetwork.bicep'
 
 module nic '../modules/networkInterfaceCard.bicep' = {
-  name: 'netInterfaceCard'
+  name: nicModuleName
   params: {
     id: vNetModule.outputs.subnetIds[0]
     nsgId: sshSecurity.outputs.nsgId
@@ -44,7 +86,7 @@ module nic '../modules/networkInterfaceCard.bicep' = {
 }
 
 module sshSecurity '../modules/networkSecurityGroup.bicep' = {
-  name: 'deploySSHSecurity'
+  name: sshSecurityModuleName
   params: {
     location: location
   }
@@ -52,35 +94,26 @@ module sshSecurity '../modules/networkSecurityGroup.bicep' = {
 
 // Now we are creating the VM
 
-@secure()
-// secure makes it so the password has to be:
-// - 6-72 characters long
-// - one uppercase character
-// - one lowercase character
-// - numeric digit
-param adminPassword string
-param adminUsername string = 'TEAuser'
-
 resource vm1 'Microsoft.Compute/virtualMachines@2025-04-01' = {
   // is the name you would see in the Azure portal
-  name: 'vmOne'
+  name: vmModuleName
   location: location
   properties: {
-    hardwareProfile: { vmSize: 'Standard_B1s' }
+    hardwareProfile: { vmSize: vmSize }
     osProfile: {
-      computerName: 'vm1'
+      computerName: computerName
       adminUsername: adminUsername
       adminPassword: adminPassword
     }
     storageProfile: {
       imageReference: {
-        publisher: 'Canonical'
-        offer: '0001-com-ubuntu-server-jammy'
-        sku: '22_04-lts'
-        version: 'latest'
+        publisher: imagePublisher
+        offer: imageOffer
+        sku: imageSku
+        version: imageVersion
       }
       osDisk: {
-        createOption: 'FromImage'
+        createOption: osDiskCreateOption
       }
     }
     networkProfile: {

@@ -2,8 +2,56 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "location": {
+      "value": "eastus"
+    },
+    "networkModuleName": {
+      "value": "myVNetModule"
+    },
+    "numOfSubnets": {
+      "value": 2
+    },
+    "overallNetworkName": {
+      "value": "myVNet"
+    },
+    "publicIPModuleName": {
+      "value": "myPublicIP"
+    },
+    "nicModuleName": {
+      "value": "myNIC"
+    },
+    "sshSecurityModuleName": {
+      "value": "mySSHSecurityGroup"
+    },
+    "vmModuleName": {
+      "value": "myVM"
+    },
+    "vmSize": {
+      "value": "Standard_B1s"
+    },
+    "computerName": {
+      "value": "myVMComputer"
+    },
+    "imagePublisher": {
+      "value": "Canonical"
+    },
+    "imageOffer": {
+      "value": "0001-com-ubuntu-server-jammy"
+    },
+    "imageSku": {
+      "value": "22_04-lts"
+    },
+    "imageVersion": {
+      "value": "latest"
+    },
+    "osDiskCreateOption": {
+      "value": "FromImage"
+    },
+    "adminUsername": {
+      "value": "TEAuser"
+    },
     "adminPassword": {
-      "value": ""
+      "value": "hello123456HELLO"
     }
   }
 }
