@@ -1,13 +1,16 @@
 param location string
+param publicIPName string
+param publicIPSKU string
+param publicAllocationMethod string
 
 resource publicIP 'Microsoft.Network/publicIPAddresses@2025-05-01' = {
-  name: 'myPublicIP'
+  name: publicIPName
   location: location
   sku: {
-    name: 'Standard'
+    name: publicIPSKU
   }
   properties: {
-    publicIPAllocationMethod: 'Static'
+    publicIPAllocationMethod: publicAllocationMethod
   }
 }
 

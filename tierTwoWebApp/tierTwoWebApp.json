@@ -14,8 +14,20 @@
     "overallNetworkName": {
       "value": "myVNet"
     },
+    "addressSpace": {
+      "value": "10.0.0.0/16"
+    },
     "publicIPModuleName": {
+      "value": "myPublicIPModule"
+    },
+    "publicIPName": {
       "value": "myPublicIP"
+    },
+    "publicIPSKU": {
+      "value": "Standard"
+    },
+    "publicAllocationMethod": {
+      "value": "Static"
     },
     "nicModuleName": {
       "value": "myNIC"

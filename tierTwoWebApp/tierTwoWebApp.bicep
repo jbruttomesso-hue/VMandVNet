@@ -6,6 +6,7 @@ param location string = resourceGroup().location
 param networkModuleName string
 param numOfSubnets int
 param overallNetworkName string
+param addressSpace string
 
 // - publicIP: name (both external and internal)
 param publicIPModuleName string
@@ -51,14 +52,16 @@ param adminUsername string
 //  - overallNetwork: The network name
 //  - location: the deployment location
 //  - subnets: the list of subnets to create, space 10.0.0.0/16
+var baseOctet = split(split(addressSpace, '/')[0], '.')
 module vNetModule '../modules/virtualNetwork.bicep' = {
   name: networkModuleName
   params: {
+    addressSpace: addressSpace
     subnets: [
       for i in range(0, numOfSubnets): {
         name: 'subnet${i + 1}'
-        prefix: '10.0.${i}.0/24'
-        addressSpace: '10.0.0.0/16'
+        // in the future I can make this flexible, but for now just /24
+        prefix: '${baseOctet[0]}.${baseOctet[1]}.${i}.0/24'
       }
     ]
     overallNetwork: overallNetworkName
@@ -66,10 +69,17 @@ module vNetModule '../modules/virtualNetwork.bicep' = {
   }
 }
 
+param publicIPName string
+param publicIPSKU string
+param publicAllocationMethod string
+
 module publicIP '../modules/publicIP.bicep' = {
   name: publicIPModuleName
   params: {
     location: location
+    publicIPName: publicIPName
+    publicIPSKU: publicIPSKU
+    publicAllocationMethod: publicAllocationMethod
   }
 }
 
