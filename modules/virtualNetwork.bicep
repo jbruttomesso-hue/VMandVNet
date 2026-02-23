@@ -4,6 +4,7 @@ param subnets array
 
 param overallNetwork string
 param location string
+param addressSpace string
 
 // Create a virtual Network with subnets
 
@@ -13,7 +14,7 @@ resource VirtualNetwork 'Microsoft.Network/virtualNetworks@2025-05-01' = {
   name: overallNetwork
   location: location
   properties: {
-    addressSpace: { addressPrefixes: ['10.0.0.0/16'] }
+    addressSpace: { addressPrefixes: [addressSpace] }
   }
 }
 

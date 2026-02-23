@@ -85,6 +85,8 @@ module publicIP '../modules/publicIP.bicep' = {
 
 // ^ this lets us access the outputs of the file we ran, 'virtualNetwork.bicep'
 
+param nicName string
+
 module nic '../modules/networkInterfaceCard.bicep' = {
   name: nicModuleName
   params: {
@@ -92,6 +94,8 @@ module nic '../modules/networkInterfaceCard.bicep' = {
     nsgId: sshSecurity.outputs.nsgId
     publicIP: publicIP.outputs.publicIP
     location: location
+    nicModuleName: nicModuleName
+    nicName: nicName
   }
 }
 

@@ -30,6 +30,9 @@
       "value": "Static"
     },
     "nicModuleName": {
+      "value": "myNICModule"
+    },
+    "nicName": {
       "value": "myNIC"
     },
     "sshSecurityModuleName": {
