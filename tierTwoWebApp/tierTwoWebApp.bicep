@@ -70,6 +70,7 @@ module vNetModule '../modules/virtualNetwork.bicep' = {
 }
 
 param publicIPName string
+param publicIPNameLower string
 param publicIPSKU string
 param publicAllocationMethod string
 
@@ -78,6 +79,7 @@ module publicIP '../modules/publicIP.bicep' = {
   params: {
     location: location
     publicIPName: publicIPName
+    publicIPNameLowerCase: publicIPNameLower
     publicIPSKU: publicIPSKU
     publicAllocationMethod: publicAllocationMethod
   }
@@ -126,32 +128,21 @@ module sshSecurity '../modules/networkSecurityGroup.bicep' = {
 
 // Now we are creating the VM
 
-resource vm1 'Microsoft.Compute/virtualMachines@2025-04-01' = {
+module vm1 '../modules/virtualMachine.bicep' = {
   // is the name you would see in the Azure portal
   name: vmModuleName
-  location: location
-  properties: {
-    hardwareProfile: { vmSize: vmSize }
-    osProfile: {
-      computerName: computerName
-      adminUsername: adminUsername
-      adminPassword: adminPassword
-    }
-    storageProfile: {
-      imageReference: {
-        publisher: imagePublisher
-        offer: imageOffer
-        sku: imageSku
-        version: imageVersion
-      }
-      osDisk: {
-        createOption: osDiskCreateOption
-      }
-    }
-    networkProfile: {
-      networkInterfaces: [
-        { id: nic.outputs.nicID }
-      ]
-    }
+  params: {
+    location: location
+    vmModuleName: vmModuleName
+    vmSize: vmSize
+    computerName: computerName
+    adminUsername: adminUsername
+    adminPassword: adminPassword
+    imagePublisher: imagePublisher
+    imageOffer: imageOffer
+    imageSku: imageSku
+    imageVersion: imageVersion
+    osDiskCreateOption: osDiskCreateOption
+    nicId: nic.outputs.nicID
   }
 }

@@ -23,6 +23,9 @@
     "publicIPName": {
       "value": "myPublicIP"
     },
+    "publicIPNameLower": {
+      "value": "mypublicip3232323"
+    },
     "publicIPSKU": {
       "value": "Standard"
     },
