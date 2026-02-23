@@ -99,10 +99,28 @@ module nic '../modules/networkInterfaceCard.bicep' = {
   }
 }
 
+param networkSecurityGroupName string
+param networkSecurityDirection string
+param networkSecurityAccess string
+param networkSecurityProtocol string
+param networkSecuritySourcePortRange string
+param networkSecurityDestinationPortRange string
+param networkSecuritySourceAddressPrefix string
+param networkSecurityDestinationAddressPrefix string
+
 module sshSecurity '../modules/networkSecurityGroup.bicep' = {
   name: sshSecurityModuleName
   params: {
     location: location
+    networkSecurityGroupModuleName: sshSecurityModuleName
+    networkSecurityGroupName: networkSecurityGroupName
+    networkSecurityDirection: networkSecurityDirection
+    networkSecurityAccess: networkSecurityAccess
+    networkSecurityProtocol: networkSecurityProtocol
+    networkSecuritySourcePortRange: networkSecuritySourcePortRange
+    networkSecurityDestinationPortRange: networkSecurityDestinationPortRange
+    networkSecuritySourceAddressPrefix: networkSecuritySourceAddressPrefix
+    networkSecurityDestinationAddressPrefix: networkSecurityDestinationAddressPrefix
   }
 }
 

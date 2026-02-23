@@ -38,6 +38,30 @@
     "sshSecurityModuleName": {
       "value": "mySSHSecurityGroup"
     },
+    "networkSecurityGroupName": {
+      "value": "allow-ssh"
+    },
+    "networkSecurityDirection": {
+      "value": "Inbound"
+    },
+    "networkSecurityAccess": {
+      "value": "Allow"
+    },
+    "networkSecurityProtocol": {
+      "value": "Tcp"
+    },
+    "networkSecuritySourcePortRange": {
+      "value": "*"
+    },
+    "networkSecurityDestinationPortRange": {
+      "value": "22"
+    },
+    "networkSecuritySourceAddressPrefix": {
+      "value": "*"
+    },
+    "networkSecurityDestinationAddressPrefix": {
+      "value": "*"
+    },
     "vmModuleName": {
       "value": "myVM"
     },
