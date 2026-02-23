@@ -11,6 +11,9 @@ resource publicIP 'Microsoft.Network/publicIPAddresses@2025-05-01' = {
   }
   properties: {
     publicIPAllocationMethod: publicAllocationMethod
+    dnsSettings: {
+      domainNameLabel: publicIPName
+    }
   }
 }
 
